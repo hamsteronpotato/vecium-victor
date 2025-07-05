@@ -922,7 +922,7 @@ namespace Vector {
       // ... otherwise convert final image, limited by bounding box, to RGB565
       Rectangle<s32> eyesROI(_faceColMin, _faceRowMin, _faceColMax-_faceColMin+1, _faceRowMax-_faceRowMin+1);
       Vision::ImageRGB565 roi = output.GetROI(eyesROI);
-      _faceCache.img8[_faceCache.finalFace].GetROI(eyesROI).ConvertV2RGB565(drawHue, drawSat, drawHue * 2, drawSat * 2, roi);
+      _faceCache.img8[_faceCache.finalFace].GetROI(eyesROI).ConvertV2RGB565(145, 100, 250, 100, 50, 0, roi);
     }
 
     return dirty;
