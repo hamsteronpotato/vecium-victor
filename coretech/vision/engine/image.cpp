@@ -1159,6 +1159,260 @@ namespace Vision {
   }
 #undef SATURATE_CAST
 
+#define SATURATE_CAST(x) (x) // cv::saturate_cast<u8>
+  void Image::ConvertV2RGB565(u8 hue, u8 sat, u8 hue2, u8 sat2, u8 hue3, u8 sat3, ImageRGB565& output)
+  {
+    output.Allocate(GetNumRows(), GetNumCols());
+
+    s32 numRows = GetNumRows();
+    s32 numCols = GetNumCols();
+
+
+    f32 h = (f32)hue * (360/256.f) * (1/60.f);
+    f32 s = (f32)sat * (1/255.f);
+    u32 i = floor(h);
+    f32 dh = h - i; // decimal part of h
+
+    f32 h2 = (f32)hue2 * (360/256.f) * (1/60.f);
+    f32 s2 = (f32)sat2 * (1/255.f);
+    u32 i2 = floor(h2);
+    f32 dh2 = h2 - i2; // decimal part of h
+
+    f32 h3 = (f32)hue3 * (360/256.f) * (1/60.f);
+    f32 s3 = (f32)sat3 * (1/255.f);
+    u32 i3 = floor(h3);
+    f32 dh3 = h3 - i3; // decimal part of h
+
+    if(this->IsContinuous() && output.IsContinuous())
+    {
+      numCols *= numRows;
+      numRows = 1;
+    }
+
+    for(u32 r = 0; r < numRows / 5; r++)
+    {
+      const u8* row = reinterpret_cast<u8*>(GetRow(r));
+      u16* out = reinterpret_cast<u16*>(output.GetRow(r));
+
+      s32 c = 0;
+
+      for(; c < numCols; c++)
+      {
+        f32 v = (*row) * (1.f/255.f);
+
+        static const int sector_data[][3]= {{1,3,0}, {1,0,2},
+                                            {3,0,1}, {0,2,1},
+                                            {0,1,3}, {2,1,0}};
+
+        float vpqt[4];
+        vpqt[0] = v;
+        vpqt[1] = v * (1.f - s);
+        vpqt[2] = v * (1.f - (s * dh));
+        vpqt[3] = v * (1.f - (s * (1.f - dh)));
+
+        u16 b = SATURATE_CAST(vpqt[sector_data[i][0]] * 255);
+        u16 g = SATURATE_CAST(vpqt[sector_data[i][1]] * 255);
+        u16 r = SATURATE_CAST(vpqt[sector_data[i][2]] * 255);
+
+        *out = (r << 8 & 0xF800) |
+               (g << 3 & 0x07E0) |
+               (b >> 3);
+
+        ++row;
+        ++out;
+      }
+    }
+    for(u32 r = numRows / 5; r < numRows / 5 * 2; r++)
+    {
+      const u8* row = reinterpret_cast<u8*>(GetRow(r));
+      u16* out = reinterpret_cast<u16*>(output.GetRow(r));
+
+      s32 c = 0;
+
+      for(; c < numCols; c++)
+      {
+        f32 v = (*row) * (1.f/255.f);
+
+        static const int sector_data[][3]= {{1,3,0}, {1,0,2},
+                                            {3,0,1}, {0,2,1},
+                                            {0,1,3}, {2,1,0}};
+
+        float vpqt[4];
+        vpqt[0] = v;
+        vpqt[1] = v * (1.f - s2);
+        vpqt[2] = v * (1.f - (s2 * dh2));
+        vpqt[3] = v * (1.f - (s2 * (1.f - dh2)));
+
+        u16 b = SATURATE_CAST(vpqt[sector_data[i2][0]] * 255);
+        u16 g = SATURATE_CAST(vpqt[sector_data[i2][1]] * 255);
+        u16 r = SATURATE_CAST(vpqt[sector_data[i2][2]] * 255);
+
+        *out = (r << 8 & 0xF800) |
+               (g << 3 & 0x07E0) |
+               (b >> 3);
+
+        ++row;
+        ++out;
+      }
+    }
+    for(u32 r = numRows / 5 * 2; r < numRows / 5 * 3; r++)
+    {
+      const u8* row = reinterpret_cast<u8*>(GetRow(r));
+      u16* out = reinterpret_cast<u16*>(output.GetRow(r));
+
+      s32 c = 0;
+
+      for(; c < numCols; c++)
+      {
+        f32 v = (*row) * (1.f/255.f);
+
+        static const int sector_data[][3]= {{1,3,0}, {1,0,2},
+                                            {3,0,1}, {0,2,1},
+                                            {0,1,3}, {2,1,0}};
+
+        float vpqt[4];
+        vpqt[0] = v;
+        vpqt[1] = v * (1.f - s3);
+        vpqt[2] = v * (1.f - (s3 * dh3));
+        vpqt[3] = v * (1.f - (s3 * (1.f - dh3)));
+
+        u16 b = SATURATE_CAST(vpqt[sector_data[i3][0]] * 255);
+        u16 g = SATURATE_CAST(vpqt[sector_data[i3][1]] * 255);
+        u16 r = SATURATE_CAST(vpqt[sector_data[i3][2]] * 255);
+
+        *out = (r << 8 & 0xF800) |
+               (g << 3 & 0x07E0) |
+               (b >> 3);
+
+        ++row;
+        ++out;
+      }
+    }
+    for(u32 r = numRows / 5 * 3; r < numRows / 5 * 4; r++)
+    {
+      const u8* row = reinterpret_cast<u8*>(GetRow(r));
+      u16* out = reinterpret_cast<u16*>(output.GetRow(r));
+
+      s32 c = 0;
+
+      for(; c < numCols; c++)
+      {
+        f32 v = (*row) * (1.f/255.f);
+
+        static const int sector_data[][3]= {{1,3,0}, {1,0,2},
+                                            {3,0,1}, {0,2,1},
+                                            {0,1,3}, {2,1,0}};
+
+        float vpqt[4];
+        vpqt[0] = v;
+        vpqt[1] = v * (1.f - s2);
+        vpqt[2] = v * (1.f - (s2 * dh2));
+        vpqt[3] = v * (1.f - (s2 * (1.f - dh2)));
+
+        u16 b = SATURATE_CAST(vpqt[sector_data[i2][0]] * 255);
+        u16 g = SATURATE_CAST(vpqt[sector_data[i2][1]] * 255);
+        u16 r = SATURATE_CAST(vpqt[sector_data[i2][2]] * 255);
+
+        *out = (r << 8 & 0xF800) |
+               (g << 3 & 0x07E0) |
+               (b >> 3);
+
+        ++row;
+        ++out;
+      }
+    }
+    for(u32 r = numRows / 5 * 4; r < numRows; r++)
+    {
+      const u8* row = reinterpret_cast<u8*>(GetRow(r));
+      u16* out = reinterpret_cast<u16*>(output.GetRow(r));
+
+      s32 c = 0;
+
+      for(; c < numCols; c++)
+      {
+        f32 v = (*row) * (1.f/255.f);
+
+        static const int sector_data[][3]= {{1,3,0}, {1,0,2},
+                                            {3,0,1}, {0,2,1},
+                                            {0,1,3}, {2,1,0}};
+
+        float vpqt[4];
+        vpqt[0] = v;
+        vpqt[1] = v * (1.f - s);
+        vpqt[2] = v * (1.f - (s * dh));
+        vpqt[3] = v * (1.f - (s * (1.f - dh)));
+
+        u16 b = SATURATE_CAST(vpqt[sector_data[i][0]] * 255);
+        u16 g = SATURATE_CAST(vpqt[sector_data[i][1]] * 255);
+        u16 r = SATURATE_CAST(vpqt[sector_data[i][2]] * 255);
+
+        *out = (r << 8 & 0xF800) |
+               (g << 3 & 0x07E0) |
+               (b >> 3);
+
+        ++row;
+        ++out;
+      }
+    }
+  }
+#undef SATURATE_CAST
+
+#define SATURATE_CAST(x) (x) // cv::saturate_cast<u8>
+  void Image::ConvertV2RGB565(u8 hue, u8 sat, ImageRGB565& output)
+  {
+    output.Allocate(GetNumRows(), GetNumCols());
+
+    s32 numRows = GetNumRows();
+    s32 numCols = GetNumCols();
+
+
+    f32 h = (f32)hue * (360/256.f) * (1/60.f);
+    f32 s = (f32)sat * (1/255.f);
+    u32 i = floor(h);
+    f32 dh = h - i; // decimal part of h
+
+    if(this->IsContinuous() && output.IsContinuous())
+    {
+      numCols *= numRows;
+      numRows = 1;
+    }
+
+    for(u32 r = 0; r < numRows; r++)
+    {
+      const u8* row = reinterpret_cast<u8*>(GetRow(r));
+      u16* out = reinterpret_cast<u16*>(output.GetRow(r));
+
+      s32 c = 0;
+
+      for(; c < numCols; c++)
+      {
+        f32 v = (*row) * (1.f/255.f);
+
+        static const int sector_data[][3]= {{1,3,0}, {1,0,2},
+                                            {3,0,1}, {0,2,1},
+                                            {0,1,3}, {2,1,0}};
+
+        float vpqt[4];
+        vpqt[0] = v;
+        vpqt[1] = v * (1.f - s);
+        vpqt[2] = v * (1.f - (s * dh));
+        vpqt[3] = v * (1.f - (s * (1.f - dh)));
+
+        u16 b = SATURATE_CAST(vpqt[sector_data[i][0]] * 255);
+        u16 g = SATURATE_CAST(vpqt[sector_data[i][1]] * 255);
+        u16 r = SATURATE_CAST(vpqt[sector_data[i][2]] * 255);
+
+        *out = (r << 8 & 0xF800) |
+               (g << 3 & 0x07E0) |
+               (b >> 3);
+
+        ++row;
+        ++out;
+      }
+    }
+  }
+#undef SATURATE_CAST
+
   void ImageRGB::ConvertHSV2RGB565(ImageRGB565& output)
   {
     output.Allocate(GetNumRows(), GetNumCols());

@@ -47,6 +47,8 @@ namespace Vector {
   CONSOLE_VAR_RANGED(s32,   kProcFace_AntiAliasingSize,           CONSOLE_GROUP, 3, 0, 15); // full image antialiasing (3 will use NEON)
   CONSOLE_VAR_ENUM(uint8_t, kProcFace_AntiAliasingFilter,         CONSOLE_GROUP, (uint8_t)Filter::BoxFilter, "None,Box,Gaussian");
   CONSOLE_VAR_RANGED(f32,   kProcFace_AntiAliasingSigmaFraction,  CONSOLE_GROUP, 0.5f, 0.0f, 1.0f);
+ 
+  CONSOLE_VAR_ENUM(u8,    kProcFace_EyeColourMode,               CONSOLE_GROUP, 0, "Normal,Transgender,Lesbian");
 
 
 #if PROCEDURALFACE_GLOW_FEATURE
@@ -922,7 +924,19 @@ namespace Vector {
       // ... otherwise convert final image, limited by bounding box, to RGB565
       Rectangle<s32> eyesROI(_faceColMin, _faceRowMin, _faceColMax-_faceColMin+1, _faceRowMax-_faceRowMin+1);
       Vision::ImageRGB565 roi = output.GetROI(eyesROI);
-      _faceCache.img8[_faceCache.finalFace].GetROI(eyesROI).ConvertV2RGB565(10, 200, 20, 100, 50, 0, 204, 100, 204, 200, roi);
+
+      // Work out what colour mode to use
+      static const s32 kPrideEyeTypes[3] = {0, 1, 2};
+      const s32 kEyeMode = kPrideEyeTypes[kProcFace_EyeColourMode];
+      if (kEyeMode == 0) {
+        _faceCache.img8[_faceCache.finalFace].GetROI(eyesROI).ConvertV2RGB565(drawHue, drawSat, roi);
+      } else if (kEyeMode == 1)
+      {
+        _faceCache.img8[_faceCache.finalFace].GetROI(eyesROI).ConvertV2RGB565(145, 100, 250, 100, 50, 0, 250, 100, 145, 100, roi);
+      } else if (kEyeMode == 2)
+      {  
+      _faceCache.img8[_faceCache.finalFace].GetROI(eyesROI).ConvertV2RGB565(10, 200, 20, 100, 50, 0, roi);
+      } 
     }
 
     return dirty;
