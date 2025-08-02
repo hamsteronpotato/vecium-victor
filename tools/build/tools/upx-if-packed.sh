@@ -1,10 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-if [[ ! -f "${1}" ]]; then
+# usage: ./tools/build/tools/upx-if-packed.sh <path/to/upx> <path/to/file>
+
+if [[ ! -x "${1}" ]]; then
+	echo "provide an executable UPX please"
+	exit 1
+fi
+
+if [[ ! -f "${2}" ]]; then
 	echo "must give me a file to pack"
 	exit 1
 fi
 
-if [[ ! "$(strings ${1})" == *'This file is packed with the UPX executable packer'* ]]; then
-	upx --lzma --best "${1}" > /dev/null
+if [[ ! "$(strings ${2})" == *'This file is packed with the UPX executable packer'* ]]; then
+	${1} --lzma --best "${2}" > /dev/null
 fi

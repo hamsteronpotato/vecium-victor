@@ -22,7 +22,7 @@ source ${SCRIPT_PATH}/victor_env.sh
 : ${FORCE_DEPLOY:=0}
 : ${IGNORE_COMPATIBILITY_MISMATCH:=0}
 : ${IGNORE_VERSION_MISMATCH:=0}
-: ${ANKI_BUILD_TYPE:="Debug"}
+: ${ANKI_BUILD_TYPE:="Release"}
 : ${INSTALL_ROOT:="/anki"}
 : ${DEVTOOLS_INSTALL_ROOT:="/anki-devtools"}
 : ${DEVICE_RSYNC_BIN_DIR:="${DEVTOOLS_INSTALL_ROOT}/bin"}
@@ -203,7 +203,7 @@ DEPLOY_VERSION=$(cat ${STAGING_DIR}/anki/etc/victor-compat-version)
 VER_CMP=$(compare_victor_compat_version $DEPLOY_VERSION $OS_COMPAT_VERSION)
 
 if [[ ${VER_CMP} -gt 0 ]]; then
-    echo -e "Target deploy compatibility version (${DEPLOY_VERSION}) is newer than robot version (${OS_COMPAT_VERSION}).\nYou need to upgrade the OS version on your robot.  Try ./project/victor/scripts/robot_sh.sh update-os"
+    echo -e "Target deploy compatibility version (${DEPLOY_VERSION}) is newer than robot version (${OS_COMPAT_VERSION}).\nYou need to upgrade the OS base version on your robot."
 elif [[ ${VER_CMP} -lt 0 ]]; then
     echo -e "Target deploy compatibility version (${DEPLOY_VERSION}) is older than robot version (${OS_COMPAT_VERSION}).\nYou need to rebase your current branch to pick up required changes for compatibility with the robot."
 fi
@@ -235,9 +235,7 @@ set -e
 # deployment, exe and shared library files can't be replaced.
 #
 logv "stop victor services"
-robot_sh "/bin/systemctl stop victor.target mm-anki-camera"
-sleep 1
-robot_sh "/bin/systemctl stop mm-qcamera-daemon"
+robot_sh "/bin/systemctl stop anki-robot.target"
 
 logv "create target dirs"
 robot_sh mkdir -p "${INSTALL_ROOT}"
@@ -255,6 +253,9 @@ set +e
 #  robot_cp ${RSYNC_BIN_DIR}/rsync.bin ${DEVICE_RSYNC_BIN_DIR}/rsync.bin
 #fi
 
+robot_sh [ -f "/etc/rsyncd-victor.conf" ]
+if [ $? -ne 0 ]; then
+
 robot_sh [ -f "$DEVICE_RSYNC_CONF_DIR/rsyncd.conf" ]
 if [ $? -ne 0 ] || [ $FORCE_RSYNC_BIN -eq 1 ]; then
   echo "loading rsync config to device"
@@ -266,6 +267,7 @@ if [ $? -ne 0 ] || [ $FORCE_RSYNC_BIN -eq 1 ]; then
   echo "loading rsyncd.service to device"
   robot_cp ${RSYNC_BIN_DIR}/rsyncd.service ${DEVICE_RSYNC_CONF_DIR}/rsyncd.service
   robot_sh "/bin/systemctl daemon-reload"
+fi
 fi
 set -e
 

@@ -1,7 +1,7 @@
 #
 # cloud/CMakeLists.txt
 #
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.10)
 
 project(cloud)
 
@@ -94,10 +94,12 @@ anki_build_go(
   EXTRA_DEPENDS ${PROTO_GO_GEN_FILES}
 )
 
+# wrapper to add protoc-gen-go stuff to path
 add_custom_command(
   OUTPUT ${PROTO_GO_GEN_FILES}
   COMMAND ${CMAKE_COMMAND} -E make_directory "${GATEWAY_GRPC_GO_OUTPUT_DIR}"
-  COMMAND protoc
+  COMMAND "${CMAKE_SOURCE_DIR}/cloud/protoc-wrapper.sh"
+    ${ANKI_PROTOC}
     --proto_path=${PROTO_SRC_DIR}
     --go_out=${GATEWAY_GRPC_GO_OUTPUT_DIR}
     --go-grpc_out=${GATEWAY_GRPC_GO_OUTPUT_DIR}
@@ -116,7 +118,7 @@ add_custom_target(proto_gen ALL DEPENDS ${PROTO_GO_GEN_FILES})
 add_dependencies(vic-gateway proto_gen)
 
 add_custom_command(
-    OUTPUT "{CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libopus.so.0"
+    OUTPUT "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libopus.so.0"
     COMMAND ${CMAKE_COMMAND}
     ARGS -E copy_if_different "${CMAKE_SOURCE_DIR}/3rd/opus/vicos/lib/libopus.so.0.10.1" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libopus.so.0"
     COMMENT "copy libopus"
@@ -124,7 +126,7 @@ add_custom_command(
 )
 
 add_custom_target(opus
-  DEPENDS "{CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libopus.so.0"
+  DEPENDS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libopus.so.0"
 )
 
 add_dependencies(vic-cloud opus)
