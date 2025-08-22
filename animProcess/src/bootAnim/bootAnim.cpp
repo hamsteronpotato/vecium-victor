@@ -74,17 +74,15 @@ int main(int argc, char** argv)
   signal(SIGTERM, handler);
   signal(SIGINT,  handler);
 
-  lcd_init();
-  lcd_clear_screen();
-  lcd_shutdown();
-  
-  // Init lcd
+  // Removed the old logic which inited the screen, blanked it and shut it down just to init it again
   int rc = lcd_init();
   if (rc != 0)
   {
     printf("Failed to init lcd\n");
     return rc;
   }
+  // Apparently this isn't actually needed????
+  //lcd_clear_screen();
 
   // Open animation file for reading
   const char *anim_path = use_santek_sizes() ? _animPathSantek : _animPathMidas;
