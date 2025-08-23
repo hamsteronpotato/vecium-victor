@@ -27,6 +27,8 @@ IMPLEMENT_ENUM_INCREMENT_OPERATORS(VisionMode);
 static const Util::SymmetricMap<VisionMode, std::string> sNetModeLUT{
   {VisionMode::People,    "person_detector"},
   {VisionMode::Hands,     "hand_detector"},
+  // Doesn't actually exist right now
+  //{VisionMode::Robots,    "robot_detector"},
 // this made robo crash  :(
 //  {VisionMode::Pets,      "mobilenet"}, // TODO: Update to real network
 

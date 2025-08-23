@@ -17,6 +17,7 @@ enum uint_8 SalientPointType
   Person,
   SceneDescription,
   Text,
+  Robot,
   Unknown           // Generally means something is wrong
 }
 

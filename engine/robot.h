@@ -109,6 +109,7 @@ class HabitatDetectorComponent;
 class TextToSpeechCoordinator;
 class SocialPresenceEstimator;
 class SDKComponent;
+class RobotWorld;
 enum class ShutdownReason : uint8_t;
 
 namespace Audio {
@@ -242,6 +243,7 @@ public:
   INLINE_GETTERS(PublicStateBroadcaster)
   INLINE_GETTERS(RobotHealthReporter)
   INLINE_GETTERS(RobotToEngineImplMessaging)
+  INLINE_GETTERS(RobotWorld)
   INLINE_GETTERS(SDKComponent)
   INLINE_GETTERS(TextToSpeechCoordinator)
   INLINE_GETTERS(TouchSensorComponent)

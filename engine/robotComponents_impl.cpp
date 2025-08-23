@@ -80,6 +80,7 @@ class RobotExternalRequestComponent;
 class AccountSettingsManager;
 class UserEntitlementsManager;
 class RangeSensorComponent;
+class RobotWorld;
 } // namespace Vector
 
 // Template specializations mapping enums from the _fwd.h file to the class forward declarations above
@@ -141,6 +142,7 @@ LINK_COMPONENT_TYPE_TO_ENUM(AccountSettingsManager,        RobotComponentID, Acc
 LINK_COMPONENT_TYPE_TO_ENUM(UserEntitlementsManager,       RobotComponentID, UserEntitlementsManager)
 LINK_COMPONENT_TYPE_TO_ENUM(RangeSensorComponent,          RobotComponentID, RangeSensor)
 LINK_COMPONENT_TYPE_TO_ENUM(SocialPresenceEstimator,       RobotComponentID, SocialPresenceEstimator)
+LINK_COMPONENT_TYPE_TO_ENUM(RobotWorld,                    RobotComponentID, RobotWorld);
 
 
 // Translate entity into string
@@ -201,6 +203,7 @@ std::string GetComponentStringForID<Vector::RobotComponentID>(Vector::RobotCompo
     CASE(RobotHealthReporter)
     CASE(RobotStatsTracker)
     CASE(RobotToEngineImplMessaging)
+    CASE(RobotWorld)
     CASE(SDK)
     CASE(SettingsCommManager)
     CASE(SettingsManager)

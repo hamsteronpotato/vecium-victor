@@ -74,6 +74,7 @@
 #include "engine/robotManager.h"
 #include "engine/robotStateHistory.h"
 #include "engine/robotToEngineImplMessaging.h"
+#include "engine/robotWorld.h"
 #include "engine/viz/vizManager.h"
 
 #include "util/cpuProfiler/cpuProfiler.h"
@@ -367,6 +368,7 @@ Robot::Robot(const RobotID_t robotID, CozmoContext* context)
     _components->AddDependentComponent(RobotComponentID::UserEntitlementsManager,    new UserEntitlementsManager());
     _components->AddDependentComponent(RobotComponentID::LocaleComponent,            new LocaleComponent());
     _components->AddDependentComponent(RobotComponentID::SocialPresenceEstimator,    new SocialPresenceEstimator());
+    _components->AddDependentComponent(RobotComponentID::RobotWorld,                 new RobotWorld());
     _components->InitComponents(this);
   }
 

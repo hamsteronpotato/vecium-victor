@@ -33,6 +33,7 @@
 #include "engine/robot.h"
 #include "engine/robotDataLoader.h"
 #include "engine/robotStateHistory.h"
+#include "engine/robotWorld.h"
 #include "engine/vision/imageSaver.h"
 #include "engine/vision/visionModesHelpers.h"
 #include "engine/vision/visionSystem.h"
@@ -936,6 +937,10 @@ namespace Vector {
         //  and should be done before sending RobotProcessedImage below!)
         tryAndReport(&VisionComponent::UpdatePets,                 {VisionMode::Pets});
 
+        // NOTE: UpdateRobots will also update RobotWorld (which broadcasts face observations
+        //  and should be done before sending RobotProcessedImage below!)
+        tryAndReport(&VisionComponent::UpdateRobots,               {VisionMode::Robots});
+
         tryAndReport(&VisionComponent::UpdateMotionCentroid,       {VisionMode::Motion});
         tryAndReport(&VisionComponent::UpdateOverheadEdges,        {VisionMode::OverheadEdges});
         tryAndReport(&VisionComponent::UpdateComputedCalibration,  {VisionMode::Calibration});
@@ -1147,6 +1152,11 @@ namespace Vector {
 
     return lastResult;
   } // UpdateFaces()
+
+  Result VisionComponent::UpdateRobots(const VisionProcessingResult& procResult){
+    Result lastResult = _robot->GetRobotWorld().VisionUpdate(procResult.salientPoints);
+    return lastResult;
+  }
 
   Result VisionComponent::UpdatePets(const VisionProcessingResult& procResult)
   {

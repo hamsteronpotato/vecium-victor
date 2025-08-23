@@ -242,6 +242,10 @@ message RobotObservedPet {
     Vision::PetType  petType
 }
 
+// RobotObservedRobot
+message RobotObservedRobot {
+}
+
 // RobotObservedMotion
 message RobotObservedMotion {
     uint_32  timestamp,     // Of the corresponding image

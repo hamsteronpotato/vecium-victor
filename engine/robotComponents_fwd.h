@@ -78,6 +78,7 @@ enum class RobotComponentID {
   RobotHealthReporter,
   RobotStatsTracker,
   RobotToEngineImplMessaging,
+  RobotWorld,
   SocialPresenceEstimator,
   StateHistory,
   TextToSpeechCoordinator,

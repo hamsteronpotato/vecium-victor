@@ -119,9 +119,10 @@ CONSOLE_VAR(u32, kCalibTargetType, "Vision.Calibration", (u32)CameraCalibrator::
 CONSOLE_VAR_RANGED(f32, kFaceTrackingCropWidthFraction, "Vision.FaceDetection", 2.f / 3.f, 0.f, 1.f);
 
 // Fake hand and pet detections for testing behaviors while we don't have reliable neural net models
-CONSOLE_VAR_RANGED(f32, kFakeHandDetectionProbability, "Vision.NeuralNets", 0.f, 0.f, 1.f);
-CONSOLE_VAR_RANGED(f32, kFakeCatDetectionProbability,  "Vision.NeuralNets", 0.f, 0.f, 1.f);
-CONSOLE_VAR_RANGED(f32, kFakeDogDetectionProbability,  "Vision.NeuralNets", 0.f, 0.f, 1.f);
+CONSOLE_VAR_RANGED(f32, kFakeHandDetectionProbability,  "Vision.NeuralNets", 0.f, 0.f, 1.f);
+CONSOLE_VAR_RANGED(f32, kFakeCatDetectionProbability,   "Vision.NeuralNets", 0.f, 0.f, 1.f);
+CONSOLE_VAR_RANGED(f32, kFakeDogDetectionProbability,   "Vision.NeuralNets", 0.f, 0.f, 1.f);
+CONSOLE_VAR_RANGED(f32, kFakeRobotDetectionProbability, "Vision.NeuralNets", 1.f, 0.f, 1.f);
 
 CONSOLE_VAR(bool, kDisplayUndistortedImages,"Vision.General", false);
   
@@ -1433,7 +1434,8 @@ void VisionSystem::AddFakeDetections(const TimeStamp_t atTimestamp, const std::s
   // DEBUG: Randomly fake detections of hands and pets if this network was registered to those modes
   if(Util::IsFltGTZero(kFakeHandDetectionProbability) ||
      Util::IsFltGTZero(kFakeCatDetectionProbability) ||
-     Util::IsFltGTZero(kFakeDogDetectionProbability))
+     Util::IsFltGTZero(kFakeDogDetectionProbability) ||
+     Util::IsFltGTZero(kFakeRobotDetectionProbability))
   {
     std::vector<Vision::SalientPointType> fakeDetectionsToAdd;
     for(auto & mode : modes)
@@ -1452,6 +1454,9 @@ void VisionSystem::AddFakeDetections(const TimeStamp_t atTimestamp, const std::s
       if((VisionMode::Pets == mode) && (rng.RandDbl() < kFakeDogDetectionProbability))
       {
         fakeDetectionsToAdd.emplace_back(Vision::SalientPointType::Dog);
+      }
+      if((VisionMode::Robots == mode) && (rng.RandDbl() < kFakeRobotDetectionProbability)) {
+        fakeDetectionsToAdd.emplace_back(Vision::SalientPointType::Robot);
       }
     }
     for(const auto& type : fakeDetectionsToAdd)
@@ -1658,7 +1663,7 @@ Result VisionSystem::Update(const VisionPoseData& poseData, Vision::ImageCache& 
     }
     Toc("TotalPets");
   }
-  
+
   if(IsModeEnabled(VisionMode::Motion))
   {
     Tic("TotalMotion");
