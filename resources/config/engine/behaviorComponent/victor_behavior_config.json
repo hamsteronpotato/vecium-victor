@@ -1,8 +1,8 @@
 {
   "onboardingBehavior"     : "Onboarding",
-  "normalBaseBehavior"     : "InitNormalOperation",
-  "devBaseBehavior"        : "DevBaseBehavior",
-  "postOnboardingBehavior" : "ModeSelector"
+  "normalBaseBehavior"     : "DevImageCapture",
+  "devBaseBehavior"        : "DevImageCapture",
+  "postOnboardingBehavior" : "DevImageCapture"
   // PR demo is hardcoded
   // factory behavior is hardcoded
   // acoustic testing behavior is hardcoded

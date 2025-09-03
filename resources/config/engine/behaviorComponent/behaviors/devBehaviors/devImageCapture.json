@@ -3,12 +3,12 @@
   "behaviorClass": "DevImageCapture",
 
   // path to save the images on the robot relative to "<reourceCacheDir>/camera/images"
-  "save_path": "classes",
+  "save_path": "vectection",
 
   // class names to cycle through by raising lift, used as subdirs to above path when saving
   // special case: use "FalseNegatives" and/or "FalsePositives" to cause images to be saved only once
   //  a any vision_mode specified below results in a detection or no detection, respectively
-  "class_names": ["class_A", "class_B", "class_C"],
+  "class_names": ["vector", "cozmo", "no_robots"],
 
   // image quality: [1-100]:JPEG quality, -1: use PNG
   "quality": 100,
@@ -45,5 +45,5 @@
   // other than "SaveImages" and "MirrorMode" (which are always enabled)
   // see visionModes.clad/h for the names of available vision modes
   // NOTE: modes will be scheduled with "Standard" frequency
-  "vision_modes": []  // e.g. ["People", "Markers", "Faces"]
+  "vision_modes": ["AutoExp", "WhiteBalance"]  // e.g. ["People", "Markers", "Faces"]
 }
