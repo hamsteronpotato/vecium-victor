@@ -26,11 +26,9 @@ enum class ScreenName : uint8_t {
   Pairing,
     
   Main,
-  ClearUserData,
-  ClearUserDataFail,
+  Finished,
+  PleaseWait,
   Rebooting,
-  SelfTest,
-  SelfTestRunning,
   Network,
   SensorInfo,
   IMUInfo,

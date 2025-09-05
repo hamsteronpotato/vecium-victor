@@ -53,6 +53,7 @@
 
 #include "webServerProcess/src/webService.h"
 
+#include <stdlib.h>
 #include <chrono>
 #include <fstream>
 #include <iomanip>
@@ -222,11 +223,8 @@ void FaceInfoScreenManager::Init(Anim::AnimContext* context, Anim::AnimationStre
   ADD_SCREEN(FAC, None);
   ADD_SCREEN(CustomText, None);
   ADD_SCREEN(Main, Network);
-  ADD_SCREEN_WITH_TEXT(ClearUserData, Main, {"CLEAR OUT SOUL?"});
-  ADD_SCREEN_WITH_TEXT(ClearUserDataFail, Main, {"UNABLE TO CLEAR SOUL"});
-  ADD_SCREEN_WITH_TEXT(Rebooting, Rebooting, {"Vector will remember that..."});
-  ADD_SCREEN_WITH_TEXT(SelfTest, Main, {"START SELF TEST?"});
-  ADD_SCREEN(SelfTestRunning, SelfTestRunning)
+  ADD_SCREEN_WITH_TEXT(Finished, Main, {"FINISHED TAKING PHOTOS?"});
+  ADD_SCREEN_WITH_TEXT(PleaseWait, Finished, {"Please Wait..."})
   ADD_SCREEN(Network, SensorInfo);
   ADD_SCREEN(SensorInfo, IMUInfo);
   ADD_SCREEN(IMUInfo, MotorInfo);
@@ -314,39 +312,16 @@ void FaceInfoScreenManager::Init(Anim::AnimContext* context, Anim::AnimationStre
   SET_ENTER_ACTION(Main, mainEnterFcn);
 
   ADD_MENU_ITEM(Main, "EXIT", None);
-#if ENABLE_SELF_TEST
-  ADD_MENU_ITEM(Main, IsXray() ? "TEST" : "SELF TEST", SelfTest);
-#endif
-  ADD_MENU_ITEM(Main, IsXray() ? "CLEAR" : "CLEAR OUT SOUL", ClearUserData);
-
-  // === Self test screen ===
-  ADD_MENU_ITEM(SelfTest, "EXIT", Main);
-  FaceInfoScreen::MenuItemAction confirmSelfTest = [animStreamer, this]() {
-    animStreamer->Abort();
-    animStreamer->EnableKeepFaceAlive(false, 0);
-    _context->GetBackpackLightComponent()->SetSelfTestRunning(true);
-    RobotInterface::SendAnimToEngine(RobotInterface::StartSelfTest());
-    return ScreenName::SelfTestRunning;
-  };
-  ADD_MENU_ITEM_WITH_ACTION(SelfTest, "CONFIRM", confirmSelfTest);
-  DISABLE_TIMEOUT(SelfTestRunning);
+  ADD_MENU_ITEM(Main, IsXray() ? "FINISH" : "FINISH", Finished);
   
   // Clear User Data menu
-  FaceInfoScreen::MenuItemAction confirmClearUserData = [this]() {
-    // Write this file to indicate that the data partition should be wiped on reboot
-    if (!Util::FileUtils::WriteFile("/run/wipe-data", "1")) {
-      LOG_WARNING("FaceInfoScreenManager.ClearUserData.Failed", "");
-      return ScreenName::ClearUserDataFail;
-    }
-
-    // Reboot robot for clearing to take effect
-    LOG_INFO("FaceInfoScreenManager.ClearUserData.Rebooting", "");
-    this->Reboot();
-    return ScreenName::Rebooting;
+  FaceInfoScreen::MenuItemAction uploadPhotos = []() {
+    // Switch into gobot program
+    (void)system("systemd-run /anki/bin/upload-photos");
+    return ScreenName::PleaseWait;
   };
-  ADD_MENU_ITEM(ClearUserData, "EXIT", Main);
-  ADD_MENU_ITEM_WITH_ACTION(ClearUserData, "CONFIRM", confirmClearUserData);
-  SET_TIMEOUT(ClearUserDataFail, 2.f, Main);
+  ADD_MENU_ITEM(Finished, "NO", Main);
+  ADD_MENU_ITEM_WITH_ACTION(Finished, "YES", uploadPhotos);
 
 
   // === Network screen ===
@@ -488,7 +463,6 @@ bool FaceInfoScreenManager::IsActivelyDrawingToScreen() const
     case ScreenName::Pairing:
     case ScreenName::ToggleMute:
     case ScreenName::AlexaNotification:
-    case ScreenName::SelfTestRunning:
       return false;
     default:
       return true;
@@ -580,8 +554,7 @@ void FaceInfoScreenManager::SetScreen(ScreenName screen)
   RobotInterface::EnableMotorPower msg;
   msg.motorID = MotorID::MOTOR_LIFT;
   msg.enable = (!currScreenIsDebug ||
-                GetCurrScreenName() == ScreenName::CameraMotorTest ||
-                GetCurrScreenName() == ScreenName::SelfTestRunning);
+                GetCurrScreenName() == ScreenName::CameraMotorTest);
   SendAnimToRobot(std::move(msg));
 #endif
 
@@ -2124,12 +2097,6 @@ bool FaceInfoScreenManager::ScreenNeedsWait(const ScreenName& screenName) const
 
 void FaceInfoScreenManager::SelfTestEnd(Anim::AnimationStreamer* animStreamer)
 {
-  const ScreenName curScreen = FaceInfoScreenManager::getInstance()->GetCurrScreenName();
-  if(curScreen != ScreenName::SelfTestRunning)
-  {
-    return;
-  }
-
   animStreamer->EnableKeepFaceAlive(true, 0);
   _context->GetBackpackLightComponent()->SetSelfTestRunning(false);
   
@@ -2138,13 +2105,6 @@ void FaceInfoScreenManager::SelfTestEnd(Anim::AnimationStreamer* animStreamer)
   
 void FaceInfoScreenManager::ExitCCScreen(Anim::AnimationStreamer* animStreamer)
 {
-  const ScreenName curScreen = FaceInfoScreenManager::getInstance()->GetCurrScreenName();
-  if(curScreen == ScreenName::SelfTestRunning)
-  {
-    animStreamer->EnableKeepFaceAlive(true, 0);
-    _context->GetBackpackLightComponent()->SetSelfTestRunning(false);
-  }
-  
   SetScreen(ScreenName::None);
 }
 
