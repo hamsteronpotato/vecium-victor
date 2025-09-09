@@ -15,6 +15,7 @@
 #include "util/entityComponent/iDependencyManagedComponent.h"
 #include "coretech/common/shared/types.h"
 #include "generated/coretech/vision/clad/types/salientPointTypes.h"
+#include <list>
 
 namespace Anki {
 namespace Vector {
