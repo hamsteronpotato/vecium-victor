@@ -29,9 +29,8 @@
     "PlaybackMessage",
     "KnowledgeGraphQuestion",
     "RespondToRenameFace", // not actually a voice command, but is paired with MeetVictor so I'm putting it here
+    // i removed ReactToAffirmative and ReactToNegative because they were causing issues with BlackJack RTP
     "MeetVictor",
-    "ReactToAffirmative", // must come somewhere after blackjack or other behaviors which use the affirmative intent
-    "ReactToNegative", // must come somewhere after blackjack or other behaviors which use the negative intent
     "DanceToTheBeatVoiceCommand"
   ]
 }

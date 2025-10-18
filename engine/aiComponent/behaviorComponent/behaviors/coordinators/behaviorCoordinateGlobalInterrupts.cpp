@@ -52,7 +52,8 @@ namespace{
                                                                            BEHAVIOR_CLASS(PopAWheelie),
                                                                            BEHAVIOR_CLASS(PounceWithProx),
                                                                            BEHAVIOR_CLASS(RollBlock),
-                                                                           BEHAVIOR_CLASS(PossiblePerformance) }};
+                                                                           BEHAVIOR_CLASS(PossiblePerformance),
+                                                                          BEHAVIOR_CLASS(DispatcherQueue)}};
 
   static const std::set<BehaviorClass> kBehaviorClassesToSuppressReactToSound = {{ BEHAVIOR_CLASS(BlackJack),
                                                                                    BEHAVIOR_CLASS(DanceToTheBeat),
@@ -66,7 +67,8 @@ namespace{
                                                                                    BEHAVIOR_CLASS(PounceWithProx),
                                                                                    BEHAVIOR_CLASS(RollBlock),
                                                                                    BEHAVIOR_CLASS(FindCubeAndThen),
-                                                                                   BEHAVIOR_CLASS(PossiblePerformance)}};
+                                                                                   BEHAVIOR_CLASS(PossiblePerformance),
+                                                                                   BEHAVIOR_CLASS(DispatcherQueue)}};
 
   static const std::set<BehaviorClass> kBehaviorClassesToSuppressTouch = {{ BEHAVIOR_CLASS(BlackJack),
                                                                             BEHAVIOR_CLASS(PossiblePerformance) }};
