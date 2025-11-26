@@ -36,7 +36,6 @@ namespace {
   // It is a binary file containing all the frames in the animation in rgb565 format
   static const char* _animPathSantek = "/anki/data/assets/cozmo_resources/config/engine/animations/boot_anim.raw";
   static const char* _animPathMidas = "/anki/data/assets/cozmo_resources/config/engine/animations/boot_anim_20.raw";
-  static const char* _animPathCustom = "/persist/boot_anim.raw";
   bool gShutdown = false;
 }
 
@@ -63,20 +62,11 @@ static void handler(int signum)
   gShutdown = true;
 }
 
-bool custom_exists() {
-  struct stat buffer;   
-  return (stat("/persist/boot_anim.raw", &buffer) == 0);
-}
-
 int main(int argc, char** argv)
 {
   // Setup signal handlers so we can cleanly exit
   signal(SIGTERM, handler);
   signal(SIGINT,  handler);
-
-  lcd_init();
-  lcd_clear_screen();
-  lcd_shutdown();
   
   // Init lcd
   int rc = lcd_init();
@@ -88,12 +78,11 @@ int main(int argc, char** argv)
 
   // Open animation file for reading
   const char *anim_path = use_santek_sizes() ? _animPathSantek : _animPathMidas;
-  const char *true_anim_path = custom_exists() ? _animPathCustom : anim_path;
   
-  int fd = open(true_anim_path, O_RDONLY, 0644);
+  int fd = open(anim_path, O_RDONLY, 0644);
   if(fd < 0)
   {
-    printf("Failed to open %s\n", true_anim_path);
+    printf("Failed to open %s\n", anim_path);
     return -1;
   }
 
@@ -133,7 +122,7 @@ int main(int argc, char** argv)
   {
     // Figure out which frame we should play in order to adhere to
     // a frame rate of kFrameDuration_ms
-    static const uint32_t kFrameDuration_ms = 41;
+    static const uint32_t kFrameDuration_ms = 60;
     const uint32_t nextFrameToDraw = timeCount / kFrameDuration_ms;
 
     // Time how long it takes to animate/draw this frame

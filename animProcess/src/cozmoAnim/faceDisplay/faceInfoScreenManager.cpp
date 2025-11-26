@@ -65,10 +65,9 @@
 #include <sys/reboot.h>
 #endif
 
-// CHANGE THIS TO BE YOUR PROJECT'S STUFF
-const std::string OSProject = "WireOS";
-const std::string Creator = "By Wire/kercre123";
-const std::string CreatorWebsite = "kerigan.dev";
+const std::string OSProject = "Vecium";
+const std::string Creator = "By Amy (hamsteronpotato)";
+const std::string CreatorWebsite = "amymc.dev";
 
 // Log options
 #define LOG_CHANNEL    "FaceInfoScreenManager"
