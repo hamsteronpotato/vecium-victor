@@ -168,8 +168,6 @@ message GatewayWrapper {
     UpdateSettingsResponse        update_settings_response           = 303;
     UpdateAccountSettingsRequest  update_account_settings_request    = 304;
     UpdateAccountSettingsResponse update_account_settings_response   = 305;
-    UpdateUserEntitlementsRequest  update_user_entitlements_request  = 306;
-    UpdateUserEntitlementsResponse update_user_entitlements_response = 307;
 
     // ------------ sdk behavior request/response pairs --------------------
     DriveOffChargerRequest        drive_off_charger_request          = 400;

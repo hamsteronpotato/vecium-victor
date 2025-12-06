@@ -575,13 +575,6 @@ service ExternalInterface {
     };
   }
 
-  rpc UpdateUserEntitlements(UpdateUserEntitlementsRequest) returns (UpdateUserEntitlementsResponse) {
-    option (google.api.http) = {
-      post: "/v1/update_user_entitlements",
-      body: "*"
-    };
-  }    
-
   // StartUpdateEngine cycles the update-engine service (to start a new check for an update) and sets up a stream of 
   // UpdateStatusResponse Events.
   rpc StartUpdateEngine(CheckUpdateStatusRequest) returns (CheckUpdateStatusResponse) {

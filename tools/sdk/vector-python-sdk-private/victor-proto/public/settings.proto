@@ -40,7 +40,6 @@ enum JdocType {
   ROBOT_SETTINGS = 0;
   ROBOT_LIFETIME_STATS = 1;
   ACCOUNT_SETTINGS = 2;
-  USER_ENTITLEMENTS = 3;
 }
 
 enum JdocResolveMethod {
@@ -112,10 +111,6 @@ enum UserEntitlement {
   KICKSTARTER_EYES = 0;
 }
 
-message UserEntitlementsConfig {
-  oneof oneof_kickstarter_eyes { bool kickstarter_eyes = 1; }
-}
-
 enum ResultCode {
   SETTINGS_ACCEPTED        = 0;
   ERROR_UPDATE_IN_PROGRESS = 1;
@@ -157,16 +152,6 @@ message UpdateAccountSettingsRequest {
 }
 
 message UpdateAccountSettingsResponse {
-  ResponseStatus status = 1;
-  ResultCode code = 2;
-  Jdoc doc = 3;
-}
-
-message UpdateUserEntitlementsRequest {
-  UserEntitlementsConfig user_entitlements = 1;
-}
-
-message UpdateUserEntitlementsResponse {
   ResponseStatus status = 1;
   ResultCode code = 2;
   Jdoc doc = 3;

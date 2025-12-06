@@ -82,7 +82,6 @@ enum class RobotComponentID {
   StateHistory,
   TextToSpeechCoordinator,
   TouchSensor,
-  UserEntitlementsManager,
   VariableSnapshotComponent,
   Vision,
   VisionScheduleMediator,

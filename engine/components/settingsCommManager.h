@@ -5,7 +5,7 @@
  * Created: 6/15/18
  *
  * Description: Communicates settings with App and Cloud; calls into SettingsManager
- * (for robot settings), AccountSettingsManager and UserEntitlementsManager
+ * (for robot settings) and AccountSettingsManager
  *
  * Copyright: Anki, Inc. 2018
  *
@@ -34,7 +34,6 @@ class AnkiEvent;
 class IGatewayInterface;
 class SettingsManager;
 class AccountSettingsManager;
-class UserEntitlementsManager;
 class JdocsManager;
 namespace external_interface {
   class GatewayWrapper;
@@ -94,11 +93,6 @@ public:
                                           const bool updateSettingsJdoc = false);
   bool ToggleAccountSettingHelper        (const external_interface::AccountSetting accountSetting);
 
-  bool HandleUserEntitlementChangeRequest(const external_interface::UserEntitlement userEntitlement,
-                                          const Json::Value& settingJson,
-                                          const bool updateUserEntitlementsJdoc = false);
-  bool ToggleUserEntitlementHelper       (const external_interface::UserEntitlement userEntitlement);
-
   void RefreshConsoleVars();
 
   // for volume change notifications
@@ -114,13 +108,11 @@ private:
   void OnRequestPullJdocs             (const external_interface::PullJdocsRequest& pullJdocsRequest);
   void OnRequestUpdateSettings        (const external_interface::UpdateSettingsRequest& updateSettingsRequest);
   void OnRequestUpdateAccountSettings (const external_interface::UpdateAccountSettingsRequest& updateAccountSettingsRequest);
-  void OnRequestUpdateUserEntitlements(const external_interface::UpdateUserEntitlementsRequest& updateUserEntitlementsRequest);
   void OnRequestCheckCloud            (const external_interface::CheckCloudRequest& checkCloudRequest);
 
   Robot*                   _robot = nullptr;
   SettingsManager*         _settingsManager = nullptr;
   AccountSettingsManager*  _accountSettingsManager = nullptr;
-  UserEntitlementsManager* _userEntitlementsManager = nullptr;
   JdocsManager*            _jdocsManager = nullptr;
   IGatewayInterface*       _gatewayInterface = nullptr;
 

@@ -78,7 +78,6 @@ class JdocsManager;
 class LocaleComponent;
 class RobotExternalRequestComponent;
 class AccountSettingsManager;
-class UserEntitlementsManager;
 class RangeSensorComponent;
 } // namespace Vector
 
@@ -138,7 +137,6 @@ LINK_COMPONENT_TYPE_TO_ENUM(JdocsManager,                  RobotComponentID, Jdo
 LINK_COMPONENT_TYPE_TO_ENUM(LocaleComponent,               RobotComponentID, LocaleComponent)
 LINK_COMPONENT_TYPE_TO_ENUM(RobotExternalRequestComponent, RobotComponentID, RobotExternalRequestComponent)
 LINK_COMPONENT_TYPE_TO_ENUM(AccountSettingsManager,        RobotComponentID, AccountSettingsManager)
-LINK_COMPONENT_TYPE_TO_ENUM(UserEntitlementsManager,       RobotComponentID, UserEntitlementsManager)
 LINK_COMPONENT_TYPE_TO_ENUM(RangeSensorComponent,          RobotComponentID, RangeSensor)
 LINK_COMPONENT_TYPE_TO_ENUM(SocialPresenceEstimator,       RobotComponentID, SocialPresenceEstimator)
 
@@ -209,7 +207,6 @@ std::string GetComponentStringForID<Vector::RobotComponentID>(Vector::RobotCompo
     CASE(StimulationFaceDisplay)
     CASE(TextToSpeechCoordinator)
     CASE(TouchSensor)
-    CASE(UserEntitlementsManager)
     CASE(VariableSnapshotComponent)
     CASE(Vision)
     CASE(VisionScheduleMediator)

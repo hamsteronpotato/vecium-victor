@@ -196,13 +196,6 @@ def test_update_settings(vector_connection):
 def test_update_account_settings(vector_connection, data):
     vector_connection.send_raw("v1/update_account_settings", data, p.UpdateAccountSettingsResponse())
 
-@pytest.mark.parametrize("data", [
-    '{"user_entitlements": {"kickstarter_eyes":false}}',
-    '{"user_entitlements": {"kickstarter_eyes":true}}',
-])
-def test_update_user_entitlements(vector_connection, data):
-    vector_connection.send_raw("v1/update_user_entitlements", data, p.UpdateUserEntitlementsResponse())
-
 @live_robot_only
 def test_user_authentication(vector_connection):
     vector_connection.send("v1/user_authentication", p.UserAuthenticationRequest(), p.UserAuthenticationResponse())

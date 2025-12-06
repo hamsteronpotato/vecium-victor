@@ -79,39 +79,6 @@
       "resolveMethod" : "PULL_FROM_CLOUD",
       "jdocFormatVersion" : 1,
       "bodyOwnedByJdocManager" : false
-    },
-    "USER_ENTITLEMENTS" : {
-      "docName" : "vic.UserEntitlements",
-      "diskSavePeriod_s" : 0,
-      "warnOnCloudVersionLater" : false,
-      "errorOnCloudVersionLater" : false,
-      "cloudSavePeriod_s" : 0,
-      "cloudAbuseRules" : [
-        {
-          "recentOccurrence" : {
-            "numberOfTimes" : 3,
-            "amountOfSeconds": 10
-          },
-          "cloudAbuseSavePeriod_s" : 10
-        },
-        {
-          "recentOccurrence" : {
-            "numberOfTimes" : 7,
-            "amountOfSeconds": 30
-          },
-          "cloudAbuseSavePeriod_s" : 60
-        },
-        {
-          "recentOccurrence" : {
-            "numberOfTimes" : 15,
-            "amountOfSeconds": 60
-          },
-          "cloudAbuseSavePeriod_s" : 300
-        }
-      ],
-      "resolveMethod" : "PULL_FROM_CLOUD",
-      "jdocFormatVersion" : 1,
-      "bodyOwnedByJdocManager" : false
     }
   }
 }
